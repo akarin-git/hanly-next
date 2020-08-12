@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "components/Layout";
 import Button from "components/Base/Button";
-import SignUpForm from "components/SignUpForm";
+import SignInForm from "components/SignInForm";
 import { useAppContext } from "hooks";
 
 export default function SignUp() {
@@ -11,18 +11,31 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  const submit = async ({ nickname, email, password }) => {
+  const signIn = async ({ email, password }) => {
     setIsSending(true);
+    const {
+      data: { client_id, client_secret },
+    } = await axios.get("/api/oauth/client-credentials");
+
     try {
-      await axios.post("/api/signup", {
-        nickname,
-        email,
+      const {
+        data: { access_token },
+      } = await axios.post("/api/oauth/token", {
+        grant_type: "password",
+        client_id,
+        client_secret,
+        scope: "*",
+        username: email,
         password,
       });
-      router.push("/signin");
+      if (process.browser) {
+        window.localStorage.setItem("hanly_access_token", access_token);
+      }
+      axios.defaults.headers.common["Authorization"] = "Bearer " + access_token;
+      router.push("/friends");
     } catch (e) {
       setIsSending(false);
-      setError("登録済みのメールアドレスです");
+      setError("メールアドレスが存在しないか、パスワードが間違っています");
       setTimeout(() => {
         setError("");
       }, 2000);
@@ -32,7 +45,7 @@ export default function SignUp() {
   return (
     <Layout>
       <div className="wrap">
-        <SignUpForm isSending={isSending} onSubmit={submit} />
+        <SignInForm isSending={isSending} onSubmit={signIn} />
         <Button href="/" className="mts" isTxt>
           戻る
         </Button>

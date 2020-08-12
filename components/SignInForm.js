@@ -2,23 +2,17 @@ import { useState } from "react";
 import Input from "./Base/Input";
 import Button from "./Base/Button";
 
-function SignUpForm({ isSending, onSubmit }) {
-  const [nickname, setNickname] = useState("");
+function SignInForm({ isSending, onSubmit }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const submit = (e) => {
     e.preventDefault();
-    onSubmit({ nickname, email, password });
+    onSubmit({ email, password });
   };
 
   return (
     <form onSubmit={submit}>
-      <Input
-        value={nickname}
-        placeholder="ニックネーム"
-        onChange={setNickname}
-      />
       <Input
         value={email}
         placeholder="メールアドレス"
@@ -32,10 +26,10 @@ function SignUpForm({ isSending, onSubmit }) {
         onChange={setPassword}
       />
       <Button className="mts" disabled={isSending}>
-        新規登録
+        ログイン
       </Button>
     </form>
   );
 }
 
-export default SignUpForm;
+export default SignInForm;
