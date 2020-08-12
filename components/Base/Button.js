@@ -1,14 +1,14 @@
 import classnames from "classnames";
 import Link from "next/link";
-import styles from "../styles/Button.module.scss";
+import styles from "styles/Button.module.scss";
 
-function Button({ href, disabled, isTxt, children, onClick }) {
+function Button({ className, href, disabled, isTxt, children, onClick }) {
   return (
     <>
       {href ? (
         <Link href={href}>
           <a
-            className={classnames(styles.btn, {
+            className={classnames(className, styles.btn, {
               [styles.isTxt]: isTxt,
               [styles.isDisabled]: disabled,
             })}
@@ -18,7 +18,9 @@ function Button({ href, disabled, isTxt, children, onClick }) {
         </Link>
       ) : (
         <button
-          className={classnames(styles.btn, { [styles.isTxt]: isTxt })}
+          className={classnames(className, styles.btn, {
+            [styles.isTxt]: isTxt,
+          })}
           disabled={disabled}
           onClick={onClick}
         >
@@ -29,4 +31,4 @@ function Button({ href, disabled, isTxt, children, onClick }) {
   );
 }
 
-export default Button;
+export default React.memo(Button);

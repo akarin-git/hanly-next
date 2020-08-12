@@ -1,6 +1,6 @@
-import styles from "../styles/Home.module.scss";
-import Layout from "../components/Layout";
-import Button from "../components/Button";
+import styles from "styles/Home.module.scss";
+import Layout from "components/Layout";
+import Button from "components/Base/Button";
 
 export default function Home() {
   return (
