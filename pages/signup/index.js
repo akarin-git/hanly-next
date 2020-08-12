@@ -25,7 +25,6 @@ export default function SignUp() {
       setTimeout(() => {
         setError("");
       }, 2000);
-      return;
     }
   };
 
