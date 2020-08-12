@@ -1,11 +1,15 @@
 import { useReducer, useEffect } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { reducer, initialState } from "state/reducer";
 import { setUser } from "state/actions";
 import Context from "context";
 import { API_ENDPOINT } from "constants.js";
 import "styles/globals.scss";
+import "dayjs/locale/ja";
+
+dayjs.locale("ja");
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -44,6 +48,7 @@ function MyApp({ Component, pageProps }) {
         dispatch,
         axios,
         accessToken,
+        dayjs,
       }}
     >
       <Component {...pageProps} />

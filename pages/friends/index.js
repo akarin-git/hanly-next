@@ -5,9 +5,17 @@ import useAxios from "axios-hooks";
 import { useGeolocation } from "beautiful-react-hooks";
 
 import Layout from "components/Layout";
+import FriendItem from "components/FriendItem";
 import styles from "styles/FriendsPage.module.scss";
 import { useAppContext } from "hooks";
 import { API_ENDPOINT } from "../../constants";
+
+const getPlaceholder = (i) =>
+  i % 3 === 0
+    ? "linear-gradient(141.16deg, #F686AB 11.81%, #FFE177 82.38%)"
+    : i % 3 === 1
+    ? "linear-gradient(141.16deg, #B7F4EF 11.81%, #E27EA0 85.05%)"
+    : "linear-gradient(141.16deg, #FFE073 11.81%, #AFFDF6 85.05%)";
 
 export default function SignUp() {
   if (!process.browser) return null;
@@ -18,6 +26,7 @@ export default function SignUp() {
     state: { user },
     axios,
     accessToken,
+    dayjs,
   } = useAppContext();
 
   const [{ data: friends, loading, error }, refetch] = useAxios({
@@ -53,6 +62,25 @@ export default function SignUp() {
               <div className={styles.user__txt}>マイページ</div>
             </a>
           </Link>
+        )}
+        {!loading && friends.length && (
+          <div className={styles.friends}>
+            <h2 className={styles.headline}>友だち</h2>
+            {friends.map((friend, i) => (
+              <FriendItem
+                key={friend.id}
+                href={"/friends/" + friend.id}
+                nickname={friend.nickname}
+                date={
+                  friend.pin
+                    ? dayjs(friend.pin.datetime).format("YYYY/MM/DD HH:mm")
+                    : ""
+                }
+                img={friend.img || ""}
+                iconPlaceholder={getPlaceholder(i)}
+              />
+            ))}
+          </div>
         )}
         {!loading && !friends.length && (
           <div className={styles.noFriends}>
