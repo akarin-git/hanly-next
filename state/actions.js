@@ -1,11 +1,6 @@
-import { SET_TEST_TEXT, SET_FILMS } from "./types";
+import { SET_USER } from "./types";
 
-export const setTestText = (text) => ({
-  type: SET_TEST_TEXT,
-  text,
-});
-
-export const setFilms = (films) => ({
-  type: SET_FILMS,
-  films,
+export const setUser = (user) => ({
+  type: SET_USER,
+  user,
 });
