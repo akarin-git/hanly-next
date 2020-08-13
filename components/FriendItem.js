@@ -4,7 +4,7 @@ import styles from "styles/FriendItem.module.scss";
 function FriendItem({ href, nickname, date, img, iconPlaceholder }) {
   return (
     <li className={styles.item}>
-      <Link href={href}>
+      <Link href="/friends/[fid]" as={href}>
         <a className={styles.link}>
           {!!img && <img src={img} alt="" className={styles.img} />}
           {!img && (

@@ -9,6 +9,7 @@ import FriendItem from "components/FriendItem";
 import styles from "styles/FriendsPage.module.scss";
 import { useAppContext } from "hooks";
 import { API_ENDPOINT } from "../../constants";
+import Loader from "components/Loader";
 
 const getPlaceholder = (i) =>
   i % 3 === 0
@@ -17,7 +18,7 @@ const getPlaceholder = (i) =>
     ? "linear-gradient(141.16deg, #B7F4EF 11.81%, #E27EA0 85.05%)"
     : "linear-gradient(141.16deg, #FFE073 11.81%, #AFFDF6 85.05%)";
 
-export default function SignUp() {
+export default function Friends() {
   if (!process.browser) return null;
 
   const [geoState] = useGeolocation();
@@ -63,6 +64,7 @@ export default function SignUp() {
             </a>
           </Link>
         )}
+        {loading && <Loader />}
         {!loading && friends.length && (
           <div className={styles.friends}>
             <h2 className={styles.headline}>友だち</h2>
