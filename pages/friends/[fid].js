@@ -10,10 +10,10 @@ import { API_ENDPOINT } from "../../constants";
 export default function Friend() {
   if (!process.browser) return null;
 
-  const { axios, accessToken, dayjs } = useAppContext();
+  const { accessToken, dayjs } = useAppContext();
   const router = useRouter();
 
-  const [{ data: friend, loading, error }] = useAxios({
+  const [{ data: friend, loading }] = useAxios({
     url: API_ENDPOINT + "/api/friends/" + router.query.fid,
     headers: {
       Authorization: "Bearer " + accessToken,
