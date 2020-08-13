@@ -1,4 +1,3 @@
-import { useState } from "react";
 import useAxios from "axios-hooks";
 import { useRouter } from "next/router";
 

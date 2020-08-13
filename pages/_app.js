@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }) {
         }
       }
     }
-  }, [axios, accessToken]);
+  }, [axios, accessToken, router]);
 
   return (
     <Context.Provider

@@ -16,10 +16,11 @@ function PersonDetail({
   latitude,
   longitude,
   datetime,
+  canEdit,
 }) {
   return (
     <div className={styles.person}>
-      <PersonImage src={faceImageUrl} />
+      <PersonImage src={faceImageUrl} canEdit={canEdit} />
       <h2 className={styles.nickname}>{nickname}</h2>
       <div className={styles.mapWrap}>
         <PersonMap latitude={latitude} longitude={longitude} />

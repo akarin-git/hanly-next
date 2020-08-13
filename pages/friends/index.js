@@ -65,7 +65,7 @@ export default function Friends() {
           </Link>
         )}
         {loading && <Loader />}
-        {!loading && friends.length && (
+        {!loading && !!friends.length && (
           <div className={styles.friends}>
             <h2 className={styles.headline}>友だち</h2>
             {friends.map((friend, i) => (
@@ -78,7 +78,7 @@ export default function Friends() {
                     ? dayjs(friend.pin.datetime).format("YYYY/MM/DD HH:mm")
                     : ""
                 }
-                img={friend.img || ""}
+                img={friend.face_image_url || ""}
                 iconPlaceholder={getPlaceholder(i)}
               />
             ))}

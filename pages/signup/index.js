@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+
 import Layout from "components/Layout";
 import Button from "components/Base/Button";
 import SignUpForm from "components/SignUpForm";
