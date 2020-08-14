@@ -11,7 +11,6 @@ export const useAppContext = () => {
 };
 
 export const useAppAxios = ({ url, method = "GET" }) => {
-  console.log(window.localStorage.getItem("hanly_access_token"));
   const [{ data, loading, error }, refetch] = useAxios({
     method,
     url: API_ENDPOINT + url,
