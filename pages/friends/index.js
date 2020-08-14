@@ -1,15 +1,13 @@
-import { useState } from "react";
 import classnames from "classnames";
 import Link from "next/link";
-import useAxios from "axios-hooks";
 import { useGeolocation } from "beautiful-react-hooks";
 
 import Layout from "components/Layout";
 import FriendItem from "components/FriendItem";
-import styles from "styles/FriendsPage.module.scss";
-import { useAppContext } from "hooks";
-import { API_ENDPOINT } from "../../constants";
 import Loader from "components/Loader";
+import { useAppContext, useAppAxios, useAppAxiosExecute } from "hooks";
+import { dayjs } from "plugins";
+import styles from "styles/FriendsPage.module.scss";
 
 const getPlaceholder = (i) =>
   i % 3 === 0
@@ -22,29 +20,24 @@ export default function Friends() {
   if (!process.browser) return null;
 
   const [geoState] = useGeolocation();
-  const [isPinning, setIsPinning] = useState(false);
   const {
     state: { user },
-    axios,
-    accessToken,
-    dayjs,
   } = useAppContext();
 
-  const [{ data: friends, loading, error }, refetch] = useAxios({
-    url: API_ENDPOINT + "/api/friends",
-    headers: {
-      Authorization: "Bearer " + accessToken,
-    },
+  const [{ data: friends, loading, error }, refetchFriends] = useAppAxios({
+    url: "/api/friends",
+  });
+  const [{ loading: pinning }, pinAndMakeFriends] = useAppAxiosExecute({
+    method: "POST",
+    url: "/api/my/pin",
   });
 
   const pin = async () => {
-    setIsPinning(true);
-    await axios.post("/api/my/pin", {
+    await pinAndMakeFriends({
       latitude: geoState.position.coords.latitude,
       longitude: geoState.position.coords.longitude,
     });
-    setIsPinning(false);
-    refetch();
+    refetchFriends();
   };
 
   return (
@@ -97,8 +90,8 @@ export default function Friends() {
           </div>
         )}
         <button
-          className={classnames(styles.pin, { [styles.isPinning]: isPinning })}
-          disabled={isPinning || !geoState.isSupported || !geoState.position}
+          className={classnames(styles.pin, { [styles.isPinning]: pinning })}
+          disabled={pinning || !geoState.isSupported || !geoState.position}
           onClick={pin}
         />
       </div>

@@ -1,51 +1,53 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
+import { useEffect } from "react";
+
 import Layout from "components/Layout";
 import Button from "components/Base/Button";
 import SignInForm from "components/SignInForm";
-import { useAppContext } from "hooks";
+import { useAppRouter, useAppAxiosExecute } from "hooks";
 
 export default function SignUp() {
-  const { axios } = useAppContext();
-  const router = useRouter();
-  const [error, setError] = useState("");
-  const [isSending, setIsSending] = useState(false);
+  const [router] = useAppRouter();
+  const [
+    { loading: fetchingCredentials },
+    fetchClientCredentials,
+  ] = useAppAxiosExecute({
+    url: "/api/oauth/client-credentials",
+  });
+  const [
+    { data, error, loading: signingIn },
+    signWithToken,
+  ] = useAppAxiosExecute({
+    url: "/api/oauth/token",
+    method: "POST",
+    errorMessage: "メールアドレスが存在しないか、パスワードが間違っています",
+  });
+
+  useEffect(() => {
+    if (data && process.browser) {
+      window.localStorage.setItem("hanly_access_token", data.access_token);
+      router.push("/friends");
+    }
+  }, [data]);
 
   const signIn = async ({ email, password }) => {
-    setIsSending(true);
-    const {
-      data: { client_id, client_secret },
-    } = await axios.get("/api/oauth/client-credentials");
-
-    try {
-      const {
-        data: { access_token },
-      } = await axios.post("/api/oauth/token", {
-        grant_type: "password",
-        client_id,
-        client_secret,
-        scope: "*",
-        username: email,
-        password,
-      });
-      if (process.browser) {
-        window.localStorage.setItem("hanly_access_token", access_token);
-      }
-      axios.defaults.headers.common["Authorization"] = "Bearer " + access_token;
-      router.push("/friends");
-    } catch (e) {
-      setIsSending(false);
-      setError("メールアドレスが存在しないか、パスワードが間違っています");
-      setTimeout(() => {
-        setError("");
-      }, 2000);
-    }
+    const { client_id, client_secret } = await fetchClientCredentials();
+    signWithToken({
+      grant_type: "password",
+      client_id,
+      client_secret,
+      scope: "*",
+      username: email,
+      password,
+    });
   };
 
   return (
     <Layout>
       <div className="wrap">
-        <SignInForm isSending={isSending} onSubmit={signIn} />
+        <SignInForm
+          isSending={fetchingCredentials || signingIn}
+          onSubmit={signIn}
+        />
         <Button href="/" className="mts" isTxt>
           戻る
         </Button>

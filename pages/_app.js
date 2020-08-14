@@ -1,54 +1,39 @@
 import { useReducer, useEffect } from "react";
-import axios from "axios";
-import dayjs from "dayjs";
-import { useRouter } from "next/router";
+
 import { reducer, initialState } from "state/reducer";
 import { setUser } from "state/actions";
 import Context from "context";
-import { API_ENDPOINT } from "constants.js";
+import { useAppRouter, useAppAxiosExecute } from "hooks";
 import "styles/globals.scss";
-import "dayjs/locale/ja";
-
-dayjs.locale("ja");
 
 function MyApp({ Component, pageProps }) {
-  const router = useRouter();
+  const [router, { needAuth }] = useAppRouter();
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const accessToken = process.browser
-    ? window.localStorage.getItem("hanly_access_token")
-    : "";
+  const [{ data: user }, fetchUser] = useAppAxiosExecute({
+    url: "/api/me",
+  });
 
   useEffect(() => {
-    axios.defaults.baseURL = API_ENDPOINT;
-
-    if (process.browser) {
-      if (
-        router.route !== "/" &&
-        router.route !== "/signup" &&
-        router.route !== "/signin"
-      ) {
-        if (!accessToken) {
-          router.replace("/signin");
-        } else {
-          axios.defaults.headers.common["Authorization"] =
-            "Bearer " + accessToken;
-          axios.get("/api/me").then(({ data }) => {
-            dispatch(setUser(data));
-          });
-        }
+    if (process.browser && needAuth) {
+      if (!window.localStorage.getItem("hanly_access_token")) {
+        router.replace("/signin");
+      } else {
+        fetchUser();
       }
     }
-  }, [axios, accessToken, router]);
+  }, [router]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(setUser(user));
+    }
+  }, [dispatch, setUser, user]);
 
   return (
     <Context.Provider
       value={{
         state,
         dispatch,
-        axios,
-        accessToken,
-        dayjs,
       }}
     >
       <Component {...pageProps} />

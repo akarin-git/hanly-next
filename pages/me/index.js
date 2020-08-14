@@ -1,20 +1,21 @@
-import { useRouter } from "next/router";
-
 import Layout from "components/Layout";
 import PersonDetail from "components/PersonDetail";
 import Loader from "components/Loader";
 import Button from "components/Base/Button";
-import { useAppContext } from "hooks";
+import { useAppContext, useAppRouter } from "hooks";
+import { dayjs } from "plugins";
+import { setUser } from "state/actions";
 
 export default function Me() {
   const {
     state: { user },
-    dayjs,
+    dispatch,
   } = useAppContext();
-  const router = useRouter();
+  const [router] = useAppRouter();
 
   const logout = () => {
     window.localStorage.setItem("hanly_access_token", "");
+    dispatch(setUser(undefined));
     router.push("/");
   };
 

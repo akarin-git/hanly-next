@@ -1,23 +1,15 @@
-import useAxios from "axios-hooks";
-import { useRouter } from "next/router";
-
 import Layout from "components/Layout";
 import PersonDetail from "components/PersonDetail";
 import Loader from "components/Loader";
-import { useAppContext } from "hooks";
-import { API_ENDPOINT } from "../../constants";
+import { useAppRouter, useAppAxios } from "hooks";
+import { dayjs } from "plugins";
 
 export default function Friend() {
   if (!process.browser) return null;
 
-  const { accessToken, dayjs } = useAppContext();
-  const router = useRouter();
-
-  const [{ data: friend, loading }] = useAxios({
-    url: API_ENDPOINT + "/api/friends/" + router.query.fid,
-    headers: {
-      Authorization: "Bearer " + accessToken,
-    },
+  const [router] = useAppRouter();
+  const [{ data: friend, loading }] = useAppAxios({
+    url: "/api/friends/" + router.query.fid,
   });
 
   return (

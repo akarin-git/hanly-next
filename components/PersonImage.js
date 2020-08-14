@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { updateUser } from "state/actions";
-import { useAppContext } from "hooks";
+import { useAppContext, useAppAxiosExecute } from "hooks";
 import Loader from "./Loader";
 
 const AvatarImageCropper = dynamic(import("react-avatar-image-cropper"), {
@@ -10,21 +10,28 @@ const AvatarImageCropper = dynamic(import("react-avatar-image-cropper"), {
 });
 
 function PersonImage({ src, canEdit }) {
-  const { axios, dispatch } = useAppContext();
+  const { dispatch } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [
+    { data: userImage, loading: uploading },
+    uploadImage,
+  ] = useAppAxiosExecute({
+    url: "/api/me/image",
+    contentType: "multipart/form-data",
+  });
 
-  const upload = async (file) => {
-    setIsUploading(true);
+  const upload = (file) => {
     const params = new FormData();
     params.append("file", file);
-    const {
-      data: { face_image_url },
-    } = await axios.post("/api/me/image", params);
-    dispatch(updateUser({ face_image_url }));
-    setIsUploading(false);
-    setIsOpen(false);
+    uploadImage(params);
   };
+
+  useEffect(() => {
+    if (userImage) {
+      dispatch(updateUser({ face_image_url: userImage.face_image_url }));
+      setIsOpen(false);
+    }
+  }, [userImage]);
 
   const openModal = () => {
     if (canEdit) {
@@ -40,7 +47,7 @@ function PersonImage({ src, canEdit }) {
 
   return (
     <div className="personImage">
-      {!isUploading && src && (
+      {!uploading && src && (
         <div
           className="img"
           style={{
@@ -49,7 +56,7 @@ function PersonImage({ src, canEdit }) {
           onClick={openModal}
         />
       )}
-      {isUploading || !src ? (
+      {uploading || !src ? (
         <div
           className="img"
           style={{
@@ -76,7 +83,7 @@ function PersonImage({ src, canEdit }) {
           </div>
         </div>
       )}
-      {isUploading && <Loader />}
+      {uploading && <Loader />}
       <style jsx>
         {`
           .modalScreen {

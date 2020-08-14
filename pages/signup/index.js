@@ -1,39 +1,26 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-
 import Layout from "components/Layout";
 import Button from "components/Base/Button";
 import SignUpForm from "components/SignUpForm";
-import { useAppContext } from "hooks";
+import { useAppRouter, useAppAxiosExecute } from "hooks";
 
 export default function SignUp() {
-  const { axios } = useAppContext();
-  const router = useRouter();
-  const [error, setError] = useState("");
-  const [isSending, setIsSending] = useState(false);
+  const [router] = useAppRouter();
+  const [{ loading, error }, signUp] = useAppAxiosExecute({
+    method: "POST",
+    url: "/api/signup",
+    errorMessage: "登録済みのメールアドレスです",
+  });
 
   const submit = async ({ nickname, email, password }) => {
-    setIsSending(true);
-    try {
-      await axios.post("/api/signup", {
-        nickname,
-        email,
-        password,
-      });
+    signUp({ nickname, email, password }).then(() => {
       router.push("/signin");
-    } catch (e) {
-      setIsSending(false);
-      setError("登録済みのメールアドレスです");
-      setTimeout(() => {
-        setError("");
-      }, 2000);
-    }
+    });
   };
 
   return (
     <Layout>
       <div className="wrap">
-        <SignUpForm isSending={isSending} onSubmit={submit} />
+        <SignUpForm isSending={loading} onSubmit={submit} />
         <Button href="/" className="mts" isTxt>
           戻る
         </Button>
