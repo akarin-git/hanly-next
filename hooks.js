@@ -39,14 +39,24 @@ export const useAppAxiosExecute = ({
     return new Promise(async (resolve, _reject) => {
       setLoading(true);
       try {
+        const headers = {
+          Authorization:
+            "Bearer " +
+            (process.browser
+              ? window.localStorage.getItem("hanly_access_token")
+              : ""),
+        };
         let result;
         if (contentType === "multipart/form-data") {
-          result = await axios.post(url, payload);
+          result = await axios.post(url, payload, {
+            headers,
+          });
         } else {
           result = await axios({
             method,
             url,
             data: payload,
+            headers,
           });
         }
         setData(result.data);
