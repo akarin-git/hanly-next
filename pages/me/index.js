@@ -1,3 +1,5 @@
+import Head from "next/head";
+
 import Layout from "components/Layout";
 import PersonDetail from "components/PersonDetail";
 import Loader from "components/Loader";
@@ -21,6 +23,9 @@ export default function Me() {
 
   return (
     <Layout>
+      <Head>
+        <title>プロフィール | Hanly</title>
+      </Head>
       {!user && <Loader />}
       {!!user && (
         <PersonDetail

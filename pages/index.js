@@ -1,3 +1,5 @@
+import Head from "next/head";
+
 import styles from "styles/Home.module.scss";
 import Layout from "components/Layout";
 import Button from "components/Base/Button";
@@ -5,6 +7,9 @@ import Button from "components/Base/Button";
 export default function Home() {
   return (
     <Layout>
+      <Head>
+        <title>Hanly - ピンを打って友だちの場所を確認しよう</title>
+      </Head>
       <div>
         <div className={styles.imgWrap}>
           <img

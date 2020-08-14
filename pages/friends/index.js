@@ -1,5 +1,6 @@
 import classnames from "classnames";
 import Link from "next/link";
+import Head from "next/head";
 import { useGeolocation } from "beautiful-react-hooks";
 
 import Layout from "components/Layout";
@@ -42,6 +43,9 @@ export default function Friends() {
 
   return (
     <Layout>
+      <Head>
+        <title>友だち一覧 | Hanly</title>
+      </Head>
       <div>
         {!!user && (
           <Link href="/me">

@@ -1,3 +1,5 @@
+import Head from "next/head";
+
 import Layout from "components/Layout";
 import PersonDetail from "components/PersonDetail";
 import Loader from "components/Loader";
@@ -14,6 +16,11 @@ export default function Friend() {
 
   return (
     <Layout>
+      <Head>
+        <title>
+          {loading || !friend ? "Loading..." : friend.nickname} | Hanly
+        </title>
+      </Head>
       {loading && <Loader />}
       {!loading && !!friend && (
         <PersonDetail

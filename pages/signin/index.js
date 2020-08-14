@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Head from "next/head";
 
 import Layout from "components/Layout";
 import Button from "components/Base/Button";
@@ -43,6 +44,9 @@ export default function SignUp() {
 
   return (
     <Layout>
+      <Head>
+        <title>ログイン | Hanly</title>
+      </Head>
       <div className="wrap">
         <SignInForm
           isSending={fetchingCredentials || signingIn}

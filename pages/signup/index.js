@@ -1,3 +1,5 @@
+import Head from "next/head";
+
 import Layout from "components/Layout";
 import Button from "components/Base/Button";
 import SignUpForm from "components/SignUpForm";
@@ -19,6 +21,9 @@ export default function SignUp() {
 
   return (
     <Layout>
+      <Head>
+        <title>新規登録 | Hanly</title>
+      </Head>
       <div className="wrap">
         <SignUpForm isSending={loading} onSubmit={submit} />
         <Button href="/" className="mts" isTxt>
