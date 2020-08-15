@@ -14,9 +14,8 @@ export default function SignUp() {
   });
 
   const submit = async ({ nickname, email, password }) => {
-    signUp({ nickname, email, password }).then(() => {
-      router.push("/signin");
-    });
+    await signUp({ nickname, email, password });
+    router.push("/signin");
   };
 
   return (
