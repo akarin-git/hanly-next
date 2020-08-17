@@ -1,1 +1,1 @@
-https://hanly-next.vercel.app/
+Use https://swr.vercel.app/
