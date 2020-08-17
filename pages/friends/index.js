@@ -6,9 +6,10 @@ import { useGeolocation } from "beautiful-react-hooks";
 import Layout from "components/Layout";
 import FriendItem from "components/FriendItem";
 import Loader from "components/Loader";
-import { useAppContext, useAppAxios, useAppAxiosExecute } from "hooks";
+import { useAppContext, useAppAxiosExecute } from "hooks";
 import { dayjs } from "plugins";
 import styles from "styles/FriendsPage.module.scss";
+import useFriends from "data/friends";
 
 const getPlaceholder = (i) =>
   i % 3 === 0
@@ -25,9 +26,7 @@ export default function Friends() {
     state: { user },
   } = useAppContext();
 
-  const [{ data: friends, loading, error }, refetchFriends] = useAppAxios({
-    url: "/api/friends",
-  });
+  const { friends, loading, error, refreshFriends } = useFriends();
   const [{ loading: pinning }, pinAndMakeFriends] = useAppAxiosExecute({
     method: "POST",
     url: "/api/my/pin",
@@ -38,7 +37,7 @@ export default function Friends() {
       latitude: geoState.position.coords.latitude,
       longitude: geoState.position.coords.longitude,
     });
-    refetchFriends();
+    refreshFriends();
   };
 
   return (

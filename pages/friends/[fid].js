@@ -3,16 +3,15 @@ import Head from "next/head";
 import Layout from "components/Layout";
 import PersonDetail from "components/PersonDetail";
 import Loader from "components/Loader";
-import { useAppRouter, useAppAxios } from "hooks";
+import { useAppRouter } from "hooks";
 import { dayjs } from "plugins";
+import useFriend from "data/friend";
 
 export default function Friend() {
   if (!process.browser) return null;
 
   const [router] = useAppRouter();
-  const [{ data: friend, loading }] = useAppAxios({
-    url: "/api/friends/" + router.query.fid,
-  });
+  const { friend, loading } = useFriend(router.query.fid);
 
   return (
     <Layout>

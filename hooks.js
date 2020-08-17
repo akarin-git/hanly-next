@@ -10,21 +10,6 @@ export const useAppContext = () => {
   return useContext(Context);
 };
 
-export const useAppAxios = ({ url, method = "GET" }) => {
-  const [{ data, loading, error }, refetch] = useAxios({
-    method,
-    url: API_ENDPOINT + url,
-    headers: {
-      Authorization:
-        "Bearer " +
-        (process.browser
-          ? window.localStorage.getItem("hanly_access_token")
-          : ""),
-    },
-  });
-  return [{ data, loading, error }, refetch];
-};
-
 export const useAppAxiosExecute = ({
   method = "GET",
   url,
