@@ -1,17 +1,19 @@
 import useSWR from "swr";
 import { createFetcher } from "./_fetcher";
 
-export default function useFriends() {
-  const { data, mutate, error } = useSWR("/api/friends", createFetcher(), {
+export default function useMe() {
+  const { data, mutate, error } = useSWR("/api/me", createFetcher(), {
     revalidateOnFocus: false,
     shouldRetryOnError: false,
   });
   const loading = !data && !error;
+  const loggedOut = error && error.message.match(/401/);
 
   return {
     loading,
+    loggedOut,
     error,
-    friends: data,
-    refreshFriends: mutate,
+    me: data,
+    refreshMe: mutate,
   };
 }

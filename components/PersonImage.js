@@ -1,17 +1,17 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 
-import { updateUser } from "state/actions";
-import { useAppContext, useAppAxiosExecute } from "hooks";
+import { useAppAxiosExecute } from "hooks";
 import Loader from "./Loader";
+import useMe from "data/me";
 
 const AvatarImageCropper = dynamic(import("react-avatar-image-cropper"), {
   ssr: false,
 });
 
 function PersonImage({ src, canEdit }) {
-  const { dispatch } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
+  const { refreshMe } = useMe();
   const [
     { data: userImage, loading: uploading },
     uploadImage,
@@ -28,7 +28,7 @@ function PersonImage({ src, canEdit }) {
 
   useEffect(() => {
     if (userImage) {
-      dispatch(updateUser({ face_image_url: userImage.face_image_url }));
+      refreshMe();
       setIsOpen(false);
     }
   }, [userImage]);

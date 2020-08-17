@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "axios-hooks": "^2.1.0",
     "beautiful-react-hooks": "^0.27.3",
     "dayjs": "^1.8.33",
     "leaflet": "^1.6.0",
@@ -20,6 +19,7 @@
     "react-leaflet": "^2.7.0",
     "ress": "^3.0.0",
     "sass": "^1.26.10",
+    "store2": "^2.12.0",
     "swr": "^0.3.0"
   }
 }

@@ -1,14 +1,9 @@
-import { useContext, useState } from "react";
-import useAxios from "axios-hooks";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import localStorage from "store2";
 
-import Context from "./context";
 import { API_ENDPOINT } from "./constants";
 import { axios } from "./plugins";
-
-export const useAppContext = () => {
-  return useContext(Context);
-};
 
 export const useAppAxiosExecute = ({
   method = "GET",
@@ -25,11 +20,9 @@ export const useAppAxiosExecute = ({
       setLoading(true);
       try {
         const headers = {
-          Authorization:
-            "Bearer " +
-            (process.browser
-              ? window.localStorage.getItem("hanly_access_token")
-              : ""),
+          Authorization: localStorage("hanly_access_token")
+            ? "Bearer " + localStorage("hanly_access_token")
+            : undefined,
         };
         let result;
         if (contentType === "multipart/form-data") {

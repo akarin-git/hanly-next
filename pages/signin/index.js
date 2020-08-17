@@ -1,13 +1,16 @@
 import { useEffect } from "react";
+import localStorage from "store2";
 import Head from "next/head";
 
 import Layout from "components/Layout";
 import Button from "components/Base/Button";
 import SignInForm from "components/SignInForm";
 import { useAppRouter, useAppAxiosExecute } from "hooks";
+import useMe from "data/me";
 
 export default function SignUp() {
   const [router] = useAppRouter();
+  const { refreshMe } = useMe();
   const [
     { loading: fetchingCredentials },
     fetchClientCredentials,
@@ -25,7 +28,8 @@ export default function SignUp() {
 
   useEffect(() => {
     if (data && process.browser) {
-      window.localStorage.setItem("hanly_access_token", data.access_token);
+      localStorage("hanly_access_token", data.access_token);
+      refreshMe();
       router.push("/friends");
     }
   }, [data]);

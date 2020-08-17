@@ -1,44 +1,21 @@
 import { useReducer, useEffect } from "react";
 
-import { reducer, initialState } from "state/reducer";
-import { setUser } from "state/actions";
-import Context from "context";
 import { useAppRouter, useAppAxiosExecute } from "hooks";
+import useMe from "data/me";
+import Loader from "components/Loader";
 import "styles/globals.scss";
 
 function MyApp({ Component, pageProps }) {
   const [router, { needAuth }] = useAppRouter();
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [{ data: user }, fetchUser] = useAppAxiosExecute({
-    url: "/api/me",
-  });
+  const { me, loading, loggedOut } = useMe();
 
   useEffect(() => {
-    if (process.browser && needAuth) {
-      if (!window.localStorage.getItem("hanly_access_token")) {
-        router.replace("/signin");
-      } else {
-        fetchUser();
-      }
+    if (loggedOut && needAuth) {
+      router.replace("/signin");
     }
-  }, [router]);
+  }, [me, loading]);
 
-  useEffect(() => {
-    if (user) {
-      dispatch(setUser(user));
-    }
-  }, [dispatch, setUser, user]);
-
-  return (
-    <Context.Provider
-      value={{
-        state,
-        dispatch,
-      }}
-    >
-      <Component {...pageProps} />
-    </Context.Provider>
-  );
+  return !needAuth || me ? <Component {...pageProps} /> : <Loader />;
 }
 
 export default MyApp;

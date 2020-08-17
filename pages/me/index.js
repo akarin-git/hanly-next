@@ -1,23 +1,21 @@
+import localStorage from "store2";
 import Head from "next/head";
 
 import Layout from "components/Layout";
 import PersonDetail from "components/PersonDetail";
 import Loader from "components/Loader";
 import Button from "components/Base/Button";
-import { useAppContext, useAppRouter } from "hooks";
+import { useAppRouter } from "hooks";
 import { dayjs } from "plugins";
-import { setUser } from "state/actions";
+import useMe from "data/me";
 
 export default function Me() {
-  const {
-    state: { user },
-    dispatch,
-  } = useAppContext();
   const [router] = useAppRouter();
+  const { me, refreshMe } = useMe();
 
   const logout = () => {
-    window.localStorage.setItem("hanly_access_token", "");
-    dispatch(setUser(undefined));
+    localStorage("hanly_access_token", "");
+    refreshMe(undefined);
     router.push("/");
   };
 
@@ -26,16 +24,16 @@ export default function Me() {
       <Head>
         <title>プロフィール | Hanly</title>
       </Head>
-      {!user && <Loader />}
-      {!!user && (
+      {!me && <Loader />}
+      {!!me && (
         <PersonDetail
-          nickname={user.nickname}
-          latitude={user.pin ? user.pin.latitude : 0}
-          longitude={user.pin ? user.pin.longitude : 0}
+          nickname={me.nickname}
+          latitude={me.pin ? me.pin.latitude : 0}
+          longitude={me.pin ? me.pin.longitude : 0}
           datetime={
-            user.pin ? dayjs(user.pin.datetime).format("YYYY/MM/DD HH:mm") : ""
+            me.pin ? dayjs(me.pin.datetime).format("YYYY/MM/DD HH:mm") : ""
           }
-          faceImageUrl={user.face_image_url}
+          faceImageUrl={me.face_image_url}
           canEdit
         />
       )}

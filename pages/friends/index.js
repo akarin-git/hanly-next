@@ -6,10 +6,11 @@ import { useGeolocation } from "beautiful-react-hooks";
 import Layout from "components/Layout";
 import FriendItem from "components/FriendItem";
 import Loader from "components/Loader";
-import { useAppContext, useAppAxiosExecute } from "hooks";
+import { useAppAxiosExecute } from "hooks";
 import { dayjs } from "plugins";
 import styles from "styles/FriendsPage.module.scss";
 import useFriends from "data/friends";
+import useMe from "data/me";
 
 const getPlaceholder = (i) =>
   i % 3 === 0
@@ -22,10 +23,8 @@ export default function Friends() {
   if (!process.browser) return null;
 
   const [geoState] = useGeolocation();
-  const {
-    state: { user },
-  } = useAppContext();
 
+  const { me } = useMe();
   const { friends, loading, error, refreshFriends } = useFriends();
   const [{ loading: pinning }, pinAndMakeFriends] = useAppAxiosExecute({
     method: "POST",
@@ -46,13 +45,13 @@ export default function Friends() {
         <title>友だち一覧 | Hanly</title>
       </Head>
       <div>
-        {!!user && (
+        {!!me && (
           <Link href="/me">
             <a className={styles.user}>
               <img
                 className={styles.user__icon}
                 src={
-                  user.face_image_url ||
+                  me.face_image_url ||
                   "https://res.cloudinary.com/kiyopikko/image/upload/v1561617116/empty-user-image_o4ll8m.png"
                 }
               />
@@ -61,7 +60,7 @@ export default function Friends() {
           </Link>
         )}
         {loading && <Loader />}
-        {!loading && !!friends.length && (
+        {!loading && !!friends && !!friends.length && (
           <div className={styles.friends}>
             <h2 className={styles.headline}>友だち</h2>
             {friends.map((friend, i) => (
