@@ -8,8 +8,6 @@ import { dayjs } from "plugins";
 import useFriend from "data/friend";
 
 export default function Friend() {
-  if (!process.browser) return null;
-
   const [router] = useAppRouter();
   const { friend, loading } = useFriend(router.query.fid);
 

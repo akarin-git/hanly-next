@@ -27,7 +27,7 @@ export default function SignUp() {
   });
 
   useEffect(() => {
-    if (data && process.browser) {
+    if (data) {
       localStorage("hanly_access_token", data.access_token);
       refreshMe();
       router.push("/friends");

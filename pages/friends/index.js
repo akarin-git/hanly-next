@@ -20,8 +20,6 @@ const getPlaceholder = (i) =>
     : "linear-gradient(141.16deg, #FFE073 11.81%, #AFFDF6 85.05%)";
 
 export default function Friends() {
-  if (!process.browser) return null;
-
   const [geoState] = useGeolocation();
 
   const { me } = useMe();
